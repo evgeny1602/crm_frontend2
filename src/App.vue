@@ -52,11 +52,9 @@
       </v-toolbar-title>
       <v-spacer />
       <v-chip>
-        <v-icon>
-          mdi-account
-        </v-icon>
+        <v-icon> mdi-account </v-icon>
         <b>
-          {{ getCurrentUser }}
+          {{ getCurrentUserLogin }}
         </b>
       </v-chip>
       <v-switch
@@ -78,17 +76,22 @@
 <script>
 // import {mapGetters} from 'vuex'
 import main_menu_items from "./config/main_menu.js";
+import { actionTypes } from "@/store/modules/auth";
 
 export default {
   data: () => ({
     drawer: null,
     menu_items: main_menu_items,
   }),
+  mounted() {
+    this.$store.dispatch(actionTypes.getCurrentUser);
+  },
   computed: {
-    getCurrentUser() {
-      return null;
+    getCurrentUserLogin() {
+      return this.$store.state.auth.currentUser
+        ? this.$store.state.auth.currentUser.login
+        : "";
     },
-    //   ...mapGetters(['getCurrentUser'])
   },
 };
 </script>
