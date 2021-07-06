@@ -13,12 +13,15 @@ export const mutationTypes = {
     getCurrentUserStart: '[auth] getCurrentUserStart',
     getCurrentUserSuccess: '[auth] getCurrentUserSuccess',
     getCurrentUserFailure: '[auth] getCurrentUserFailure',
+
+    logOut: '[auth] logOut',
 }
 
 export const actionTypes = {
     register: '[auth] register',
     login: '[auth] login',
-    getCurrentUser: '[auth] getCurrentUser'
+    getCurrentUser: '[auth] getCurrentUser',
+    logOut: '[auth] logOut'
 }
 
 const state = {
@@ -70,10 +73,23 @@ const mutations = {
         state.isLoading = false
         state.isLoggedIn = false
         state.getCurrentUser = null
+    },
+
+    [mutationTypes.logOut](state) {
+        state.isLoggedIn = false
+        state.getCurrentUser = null
     }
 }
 
 const actions = {
+    [actionTypes.logOut](context) {
+        return new Promise((resolve) => {
+            context.commit(mutationTypes.logOut)
+            window.localStorage.removeItem(TOKEN)
+            resolve()
+        })
+
+    },
     [actionTypes.register](context, payload) {
         return new Promise((resolve) => {
             context.commit(mutationTypes.registerStart)

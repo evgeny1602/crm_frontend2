@@ -1,6 +1,12 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app class="primary" dark>
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      class="primary"
+      dark
+      v-if="isLoggedIn"
+    >
       <v-img
         class="mt-4 mb-10 ml-4 mr-4"
         height="auto"
@@ -46,12 +52,12 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar app class="background" flat>
-      <v-app-bar-nav-icon @click="drawer = !drawer" />
-      <v-toolbar-title class="text-uppercase">
+      <v-app-bar-nav-icon @click="drawer = !drawer" v-if="isLoggedIn" />
+      <v-toolbar-title class="text-uppercase" v-if="isLoggedIn">
         {{ $router.currentRoute.meta.title }}
       </v-toolbar-title>
       <v-spacer />
-      <v-chip>
+      <v-chip v-if="isLoggedIn">
         <v-icon> mdi-account </v-icon>
         <b>
           {{ getCurrentUserLogin }}
@@ -74,7 +80,6 @@
 </template>
 
 <script>
-// import {mapGetters} from 'vuex'
 import main_menu_items from "./config/main_menu.js";
 import { actionTypes } from "@/store/modules/auth";
 
@@ -87,6 +92,9 @@ export default {
     this.$store.dispatch(actionTypes.getCurrentUser);
   },
   computed: {
+    isLoggedIn() {
+      return this.$store.state.auth.isLoggedIn;
+    },
     getCurrentUserLogin() {
       return this.$store.state.auth.currentUser
         ? this.$store.state.auth.currentUser.login
