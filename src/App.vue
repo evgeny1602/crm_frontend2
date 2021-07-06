@@ -1,7 +1,11 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" app class="primary" dark>
-      <v-img class="mt-4 mb-10" height="auto" src="@/assets/logo.png" />
+      <v-img
+        class="mt-4 mb-10 ml-4 mr-4"
+        height="auto"
+        src="@/assets/logo.png"
+      />
       <v-list dense nav>
         <div v-for="item in menu_items" :key="item.text">
           <v-list-group

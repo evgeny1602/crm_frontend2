@@ -4,6 +4,14 @@ const site_title = 'DubaiGold - CRM'
 
 const app_routes = [
     {
+      path: '/register',
+      name: 'Register',
+      component: () => import(/* webpackChunkName: "register" */ '../views/Register.vue'),
+      meta: {
+        title: 'Регистрация в системе'
+      }
+    },
+    {
       path: '/login',
       name: 'Login',
       component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
