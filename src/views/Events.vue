@@ -33,7 +33,7 @@ export default {
         value: "eventtype",
         f_table: "eventtypes",
         titleFields: ["name"],
-        transform: (item) => item.eventtype.name,
+        transform: (item) => (item.eventtype ? item.eventtype.name : ""),
       },
       {
         text: "Клиент",

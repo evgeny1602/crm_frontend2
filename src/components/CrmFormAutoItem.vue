@@ -88,7 +88,7 @@ export default {
     syncToCurrentItem() {
       let newCurrentItem = { ...this.currentItem };
       for (const item of this.items) {
-        if (item[this.header.titleField] == this.value) {
+        if (this.header.transform(item) == this.value) {
           newCurrentItem[this.header.value] = item;
           break;
         }

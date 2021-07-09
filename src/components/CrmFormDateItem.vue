@@ -95,6 +95,12 @@ export default {
       }
     },
     syncToCurrentItem() {
+      if (!this.date) {
+        return;
+      }
+      if (!this.time) {
+        return;
+      }
       let newCurrentItem = { ...this.currentItem };
       newCurrentItem[this.header.value] = `${this.date}T${this.time}:00.000Z`;
       this.$store.dispatch(actionTypes.setCurrentItem, newCurrentItem);

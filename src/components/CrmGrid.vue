@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="btns-container">
+    <div class="btns-container-top">
       <v-btn @click="showAddForm" class="primary mb-10">
         <v-icon dark> mdi-plus </v-icon>
       </v-btn>
@@ -198,7 +198,7 @@ export default {
 .data-grid tbody tr :hover {
   cursor: pointer;
 }
-.btns-container {
+.btns-container-top {
   display: flex;
   justify-content: flex-end;
 }
