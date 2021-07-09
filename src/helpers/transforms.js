@@ -1,5 +1,22 @@
-export const dateTransform = (d_) => {
-    const dateObj = new Date(Date.parse(d_));
+export const dateTransform = d_ => {
+    const [y, m, d, hh, mm] = getDateParts(d_)
+    if (!y) {
+        return ''
+    }
+    return `${d}.${m}.${y} ${hh}:${mm}`;
+};
+
+export const dateTransformYearFirst = d_ => {
+    const [y, m, d, hh, mm] = getDateParts(d_)
+    if (!y) {
+        return ''
+    }
+    return `${y}-${m}-${d} ${hh}:${mm}`;
+}
+
+export const getDateParts = d_ => {
+    const dateObj = new Date(Date.parse(d_) + new Date().getTimezoneOffset() * 60000);
+
     const y = dateObj.getFullYear();
     if (Number.isNaN(y)) {
         return ''
@@ -40,9 +57,8 @@ export const dateTransform = (d_) => {
     } else {
         mm = `${mm}`
     }
-    let result = `${d}.${m}.${y} ${hh}:${mm}`;
-    return result;
-};
+    return [y, m, d, hh, mm]
+}
 
 export const dateTransform_rev = (d_) => {
     const dateObj = new Date(Date.parse(`${d_}Z`));
