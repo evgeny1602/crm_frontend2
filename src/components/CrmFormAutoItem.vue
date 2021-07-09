@@ -26,6 +26,14 @@ export default {
   },
   computed: {
     displayItems() {
+      // let resultItems = []
+      // for(const item of this.items) {
+      //   let resultItem = {}
+      //   resultItem[this.header.value] = this.header.transform(item);
+      //   resultItems.push(resultItem)
+      // }
+      // return resultItems
+
       return this.items.map((item) => {
         let result = {};
         result[this.header.value] = item;
@@ -52,7 +60,12 @@ export default {
       if (titleFieldValue) {
         searchStr = titleFieldValue;
       }
-      searchStr = searchStr.split(" ");
+      if (searchStr) {
+        searchStr = searchStr.split(" ");
+      } else {
+        searchStr = [];
+      }
+
       for (const k in this.header.titleFields) {
         if (searchStr[k]) {
           filter[this.header.titleFields[k]] = searchStr[k];
