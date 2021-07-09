@@ -1,4 +1,25 @@
 <template>
   <div class="tasktypes">
+    <crm-grid />
   </div>
 </template>
+
+<script>
+import CrmGrid from "@/components/CrmGrid";
+import { actionTypes } from "@/store/modules/app";
+
+export default {
+  components: { CrmGrid },
+  mounted() {
+    this.$store.dispatch(actionTypes.setItemSingle, "tasktype");
+    this.$store.dispatch(actionTypes.setItemsMany, "tasktypes");
+    this.$store.dispatch(actionTypes.setHeaders, [
+      { text: "Название", value: "name" },
+    ]);
+    this.$store.dispatch(actionTypes.setOrderFields, ["name"]);
+    this.$store.dispatch(actionTypes.setFilterFields, ["name"]);
+    this.$store.dispatch(actionTypes.setItemTitle, "Тип задачи");
+    this.$store.dispatch(actionTypes.setItemTitle2, "Тип задачи");
+  },
+};
+</script>

@@ -1,16 +1,23 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="isVisible" persistent max-width="75%">
+    <v-dialog v-model="isVisible" persistent width="75%">
       <v-card>
-        <v-card-title class="text-h5">{{ getFormTitle }} </v-card-title>
+        <v-card-title class="text-h5 pa-6 mb-6"
+          >{{ getFormTitle }}
+        </v-card-title>
         <v-card-text>
-          <div v-for="header in headers" :key="header.value">
-            <crm-form-item :field="header.value" />
+          <div class="form-items-container">
+            <div
+              class="form-item-wrapper"
+              v-for="header in headers"
+              :key="header.value"
+            >
+              <crm-form-item :header="header" />
+            </div>
           </div>
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn class="primary" @click="saveItem"> Сохранить </v-btn>
+        <v-card-actions class="pa-6">
+          <v-btn class="primary mr-1" @click="saveItem"> Сохранить </v-btn>
           <v-btn class="error" @click="cancelAction"> Отмена </v-btn>
         </v-card-actions>
       </v-card>
@@ -37,8 +44,8 @@ export default {
       this.$emit("saveItem");
     },
     cancelAction() {
-      this.$store.dispatch(actionTypes.clearCurrentItem);
       this.$store.dispatch(actionTypes.hideAddEditForm);
+      this.$store.dispatch(actionTypes.clearCurrentItem);
     },
   },
   computed: {
@@ -68,4 +75,20 @@ export default {
   },
 };
 </script>
-CrmFormItem
+<style>
+.form-items-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.form-item-wrapper {
+  min-width: 300px;
+  width: 48%;
+}
+@media (max-width: 880px) {
+  .form-item-wrapper {
+    width: 100%;
+  }
+}
+</style>

@@ -18,8 +18,8 @@
       show-select
       v-model="selected"
       :items-per-page="limit"
-      :headers="headers"
-      :items="items"
+      :headers="tableHeaders"
+      :items="tableItems"
       :options.sync="options"
       :server-items-length="itemsCount"
       :loading="isLoading"
@@ -78,7 +78,14 @@ export default {
       this.fetchData();
     },
     rowClicked(itemData) {
-      this.$store.commit(mutationTypes.setCurrentItem, itemData);
+      let rawItemData = null;
+      for (const item of this.items) {
+        if (item.id == itemData.id) {
+          rawItemData = item;
+          break;
+        }
+      }
+      this.$store.commit(mutationTypes.setCurrentItem, rawItemData);
       this.isAdd = false;
       this.$store.commit(mutationTypes.showAddEditForm);
     },
@@ -123,9 +130,17 @@ export default {
     },
   },
   mounted() {
+    this.$store.dispatch(actionTypes.clearData);
     this.fetchData();
   },
   computed: {
+    tableHeaders() {
+      const storeHeaders = this.$store.state.app.headers;
+      const resultHeaders = storeHeaders.filter((h) => {
+        return !("is_hidden" in h);
+      });
+      return resultHeaders;
+    },
     headers() {
       return this.$store.state.app.headers;
     },
@@ -136,10 +151,32 @@ export default {
       return this.$store.state.crud.error;
     },
     items() {
-      if (this.$store.state.crud.data) {
-        return this.$store.state.crud.data[`${this.itemsMany}`];
+      return this.$store.state.crud.data[`${this.itemsMany}`];
+    },
+    tableItems() {
+      if (!this.$store.state.crud.data) {
+        return [];
       }
-      return [];
+      const storeItems = this.$store.state.crud.data[`${this.itemsMany}`];
+      if (!storeItems) {
+        return [];
+      }
+      const storeHeaders = this.$store.state.app.headers;
+      let resultItems = [];
+      for (const item of storeItems) {
+        let resultItem = { ...item };
+        for (const k of Object.keys(item)) {
+          for (const header of storeHeaders) {
+            if (k == header.value) {
+              if ("transform" in header) {
+                resultItem[k] = header.transform(item);
+              }
+            }
+          }
+        }
+        resultItems.push(resultItem);
+      }
+      return resultItems;
     },
     itemsMany() {
       return this.$store.state.app.itemsMany;

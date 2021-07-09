@@ -2,13 +2,12 @@
   <v-row justify="center">
     <v-dialog v-model="isVisible" persistent max-width="40%">
       <v-card>
-        <v-card-title class="text-h5">Удаление записей</v-card-title>
+        <v-card-title class="text-h5 pa-6 mb-6">Удаление записей</v-card-title>
         <v-card-text>
           Вы уверены, что хотите удалить выбранные записи?
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn class="primary" @click="deleteItems"> Удалить </v-btn>
+        <v-card-actions class="pa-6 mt-8">
+          <v-btn class="primary mr-1" @click="deleteItems"> Удалить </v-btn>
           <v-btn class="error" @click="cancelAction"> Отмена </v-btn>
         </v-card-actions>
       </v-card>

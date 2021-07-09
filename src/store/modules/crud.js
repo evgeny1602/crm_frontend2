@@ -1,18 +1,24 @@
 import crudApi from '@/api/crud'
 
 export const mutationTypes = {
+
     readAllStart: '[crud] readAllStart',
     readAllSuccess: '[crud] readAllSuccess',
     readAllFailure: '[crud] readAllFailure',
+
     createStart: '[crud] createStart',
     createSuccess: '[crud] createSuccess',
     createFailure: '[crud] createFailure',
+
     deleteOneStart: '[crud] deleteOneStart',
     deleteOneSuccess: '[crud] deleteOneSuccess',
     deleteOneFailure: '[crud] deleteOneFailure',
+
     updateStart: '[crud] updateStart',
     updateSuccess: '[crud] updateSuccess',
     updateFailure: '[crud] updateFailure',
+
+    clearData: '[crud] clearData'
 }
 
 export const actionTypes = {
@@ -20,6 +26,7 @@ export const actionTypes = {
     readAll: '[crud] readAll',
     deleteOne: '[crud] deleteOne',
     update: '[crud] update',
+    clearData: '[crud] clearData',
 }
 
 const state = {
@@ -29,6 +36,11 @@ const state = {
 }
 
 const mutations = {
+
+    [mutationTypes.clearData](state) {
+        state.data = null
+    },
+
     [mutationTypes.deleteOneStart](state) {
         state.isLoading = true
         state.error = null
@@ -82,6 +94,10 @@ const mutations = {
 }
 
 const actions = {
+    [actionTypes.clearData](context) {
+        context.commit(mutationTypes.clearData)
+    },
+
     [actionTypes.update](context, { apiUrl, params }) {
         return new Promise(resolve => {
             context.commit(mutationTypes.updateStart)

@@ -1,65 +1,28 @@
 <template>
-  <v-text-field
-    :label="label"
-    v-model="value"
-    outlined
-    @blur="syncToCurrentItem"
-  />
+  <crm-form-date-item v-if="header.is_date" :header="header" />
+  <crm-form-auto-item v-else-if="header.f_table" :header="header" />
+  <crm-form-bool-item v-else-if="header.is_bool" :header="header" />
+  <crm-form-text-item v-else :header="header" />
 </template>
 
 <script>
-import { actionTypes } from "@/store/modules/app";
+import CrmFormTextItem from "@/components/CrmFormTextItem";
+import CrmFormDateItem from "@/components/CrmFormDateItem";
+import CrmFormAutoItem from "@/components/CrmFormAutoItem";
+import CrmFormBoolItem from "@/components/CrmFormBoolItem";
 
 export default {
   name: "CrmFormItem",
+  components: {
+    CrmFormTextItem,
+    CrmFormDateItem,
+    CrmFormAutoItem,
+    CrmFormBoolItem,
+  },
   props: {
-    field: {
-      type: String,
+    header: {
+      type: Object,
       required: true,
-    },
-  },
-  mounted() {
-    this.value = this.currentItem[this.field];
-  },
-  computed: {
-    currentItem() {
-      return this.$store.state.app.currentItem;
-    },
-    label() {
-      let result = "";
-      for (const header of this.$store.state.app.headers) {
-        if (header.value == this.field) {
-          result = header.text;
-          break;
-        }
-      }
-      return result;
-    },
-  },
-  data() {
-    return {
-      value: null,
-    };
-  },
-  methods: {
-    syncToCurrentItem() {
-      let newCurrentItem = { ...this.currentItem };
-      newCurrentItem[this.field] = this.value;
-      this.$store.dispatch(actionTypes.setCurrentItem, newCurrentItem);
-    },
-  },
-  watch: {
-    currentItem() {
-      this.value = this.currentItem[this.field];
-    },
-    value(newVal, oldVal) {
-      if (oldVal === null) {
-        return;
-      }
-      if (oldVal == newVal) {
-        return;
-      }
-      this.syncToCurrentItem();
     },
   },
 };
