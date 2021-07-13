@@ -7,6 +7,7 @@
 <script>
 import CrmGrid from "@/components/CrmGrid";
 import { actionTypes } from "@/store/modules/app";
+import { strToBool } from "@/helpers/transforms";
 
 export default {
   components: { CrmGrid },
@@ -23,7 +24,7 @@ export default {
         text: "Основной адрес",
         value: "is_default",
         is_bool: true,
-        transform: (is_default) => (is_default ? "Да" : "Нет"),
+        transform: (item) => (strToBool(item.is_default) ? "Да" : "Нет"),
       },
       {
         text: "Клиент",
@@ -50,6 +51,7 @@ export default {
     ]);
     this.$store.dispatch(actionTypes.setItemTitle, "Адрес клиента");
     this.$store.dispatch(actionTypes.setItemTitle2, "Адрес клиента");
+    this.$store.dispatch(actionTypes.initFilter);
   },
 };
 </script>

@@ -30,8 +30,8 @@ export default {
         text: "Группа",
         value: "clientgroup",
         f_table: "clientgroups",
-        titleField: "name",
-        transform: (clientgroup) => clientgroup.name,
+        titleFields: ["name"],
+        transform: (item) => (item.clientgroup ? item.clientgroup.name : ""),
       },
     ]);
     this.$store.dispatch(actionTypes.setOrderFields, [
@@ -50,6 +50,7 @@ export default {
     ]);
     this.$store.dispatch(actionTypes.setItemTitle, "Клиент");
     this.$store.dispatch(actionTypes.setItemTitle2, "Клиента");
+    this.$store.dispatch(actionTypes.initFilter);
   },
 };
 </script>

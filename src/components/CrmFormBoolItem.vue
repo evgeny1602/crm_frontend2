@@ -1,14 +1,13 @@
 <template>
-  <v-select :items="items" :label="header.text" v-model="select" outlined />
+  <v-select :items="items" :label="header.text" v-model="select" />
 </template>
 
 <script>
-import { actionTypes } from "@/store/modules/app";
-
 export default {
   name: "CrmFormBoolItem",
   props: {
     header: { type: Object, required: true },
+    initVal: { type: Boolean, required: true },
   },
   data() {
     return {
@@ -17,29 +16,14 @@ export default {
     };
   },
   mounted() {
-    this.syncFromCurrentItem();
-  },
-  methods: {
-    syncToCurrentItem() {
-      let newCurrentItem = { ...this.currentItem };
-      newCurrentItem[this.header.value] =
-        this.select == this.items[0] ? true : false;
-      this.$store.dispatch(actionTypes.setCurrentItem, newCurrentItem);
-    },
-    syncFromCurrentItem() {
-      this.select = this.currentItem[this.header.value]
-        ? this.items[0]
-        : this.items[1];
-    },
-  },
-  computed: {
-    currentItem() {
-      return this.$store.state.app.currentItem;
-    },
+    this.select = this.initVal ? this.items[0] : this.items[1];
   },
   watch: {
-    currentItem() {
-      this.syncFromCurrentItem();
+    initVal(newValue, oldValue) {
+      if (oldValue == newValue) {
+        return;
+      }
+      this.select = this.initVal ? this.items[0] : this.items[1];
     },
     select(newValue, oldValue) {
       if (!oldValue) {
@@ -48,7 +32,10 @@ export default {
       if (oldValue == newValue) {
         return;
       }
-      this.syncToCurrentItem();
+      this.$emit("itemChanged", {
+        header: this.header,
+        itemVal: this.select == this.items[0] ? true : false,
+      });
     },
   },
 };

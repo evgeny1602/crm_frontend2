@@ -12,6 +12,8 @@ export const mutationTypes = {
     clearCurrentItem: '[app] clearCurrentItem',
     showDeleteForm: '[app] showDeleteForm',
     hideDeleteForm: '[app] hideDeleteForm',
+    setFilter: '[app] setFilter',
+    setFilterStatus: '[app] setFilterStatus',
 }
 
 export const actionTypes = {
@@ -28,6 +30,9 @@ export const actionTypes = {
     clearCurrentItem: '[app] clearCurrentItem',
     showDeleteForm: '[app] showDeleteForm',
     hideDeleteForm: '[app] hideDeleteForm',
+    setFilter: '[app] setFilter',
+    setFilterStatus: '[app] setFilterStatus',
+    initFilter: '[app] initFilter',
 }
 
 const state = {
@@ -40,17 +45,24 @@ const state = {
     headers: [],
     itemTitle: '',
     itemTitle2: '',
-    currentItem: null
+    currentItem: null,
+    filter: null,
+    filterStatus: false,
 }
 
 const mutations = {
+    [mutationTypes.setFilterStatus](state, status) {
+        state.filterStatus = status
+    },
 
-
+    [mutationTypes.setFilter](state, filter) {
+        state.filter = filter
+    },
 
     [mutationTypes.clearCurrentItem](state) {
         state.currentItem = {}
         for (const header of state.headers) {
-            state.currentItem[header.value] = null
+            state.currentItem[header.value] = ''
         }
     },
 
@@ -96,6 +108,12 @@ const mutations = {
 }
 
 const actions = {
+    [actionTypes.setFilterStatus](context, status) {
+        context.commit(mutationTypes.setFilterStatus, status)
+    },
+    [actionTypes.setFilter](context, filter) {
+        context.commit(mutationTypes.setFilter, filter)
+    },
     [actionTypes.clearCurrentItem](context) {
         context.commit(mutationTypes.clearCurrentItem)
     },
@@ -136,6 +154,17 @@ const actions = {
     [actionTypes.hideDeleteForm](context) {
         context.commit(mutationTypes.hideDeleteForm)
     },
+    [actionTypes.initFilter](context) {
+        let filter = {};
+        for (const header of context.state.headers) {
+            let initVal = "";
+            if (header.is_bool) {
+                initVal = true;
+            }
+            filter[header.value] = initVal;
+        }
+        context.commit(mutationTypes.setFilter, filter)
+    }
 }
 
 export default {

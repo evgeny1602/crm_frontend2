@@ -18,7 +18,8 @@ export const mutationTypes = {
     updateSuccess: '[crud] updateSuccess',
     updateFailure: '[crud] updateFailure',
 
-    clearData: '[crud] clearData'
+    clearData: '[crud] clearData',
+
 }
 
 export const actionTypes = {
@@ -32,10 +33,12 @@ export const actionTypes = {
 const state = {
     isLoading: false,
     data: null,
-    error: null
+    error: null,
+
 }
 
 const mutations = {
+
 
     [mutationTypes.clearData](state) {
         state.data = null
@@ -94,6 +97,7 @@ const mutations = {
 }
 
 const actions = {
+
     [actionTypes.clearData](context) {
         context.commit(mutationTypes.clearData)
     },

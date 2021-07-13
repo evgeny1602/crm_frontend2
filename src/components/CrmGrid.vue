@@ -14,6 +14,7 @@
     </div>
     <crm-delete-form @deleteItems="deleteMany" />
     <crm-add-edit-form :isAdd="isAdd" @saveItem="saveItem" />
+    <crm-filter-form @filterChanged="filterChanged" />
     <v-data-table
       show-select
       v-model="selected"
@@ -33,11 +34,11 @@ import { actionTypes } from "@/store/modules/crud";
 import { mutationTypes } from "@/store/modules/app";
 import CrmAddEditForm from "@/components/CrmAddEditForm";
 import CrmDeleteForm from "@/components/CrmDeleteForm";
+import CrmFilterForm from "@/components/CrmFilterForm";
 
 export default {
-  components: { CrmAddEditForm, CrmDeleteForm },
+  components: { CrmAddEditForm, CrmDeleteForm, CrmFilterForm },
   name: "CrmGrid",
-
   data() {
     return {
       isAdd: true,
@@ -47,7 +48,6 @@ export default {
       limit: 5,
       order: "",
       ordertype: "ASC",
-      filter: {},
     };
   },
   watch: {
@@ -116,16 +116,23 @@ export default {
           });
       }
     },
+    filterChanged() {
+      if (this.filterStatus) {
+        this.fetchData();
+      }
+    },
     fetchData() {
+      let params = {};
+      if (this.filterStatus) {
+        params = { ...this.filter };
+      }
+      params.limit = this.limit;
+      params.offset = this.offset;
+      params.order = this.order;
+      params.ordertype = this.ordertype;
       this.$store.dispatch(actionTypes.readAll, {
         apiUrl: "/" + this.itemsMany,
-        params: {
-          limit: this.limit,
-          offset: this.offset,
-          order: this.order,
-          ordertype: this.ordertype,
-          ...this.filter,
-        },
+        params: params,
       });
     },
   },
@@ -134,11 +141,24 @@ export default {
     this.fetchData();
   },
   computed: {
+    filterStatus() {
+      return this.$store.state.app.filterStatus;
+    },
+    filter() {
+      return this.$store.state.app.filter;
+    },
     tableHeaders() {
       const storeHeaders = this.$store.state.app.headers;
-      const resultHeaders = storeHeaders.filter((h) => {
-        return !("is_hidden" in h);
-      });
+      const resultHeaders = storeHeaders
+        .filter((h) => {
+          return !("is_hidden" in h);
+        })
+        .map((h) => {
+          return {
+            ...h,
+            sortable: this.$store.state.app.orderFields.includes(h.value),
+          };
+        });
       return resultHeaders;
     },
     headers() {

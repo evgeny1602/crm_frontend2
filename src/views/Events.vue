@@ -84,6 +84,7 @@ export default {
     this.$store.dispatch(actionTypes.setFilterFields, ["description"]);
     this.$store.dispatch(actionTypes.setItemTitle, "Событие");
     this.$store.dispatch(actionTypes.setItemTitle2, "Событие");
+    this.$store.dispatch(actionTypes.initFilter);
   },
 };
 </script>

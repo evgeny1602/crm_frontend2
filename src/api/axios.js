@@ -1,8 +1,11 @@
 import axios from 'axios'
+import { apiServer, apiPort } from '../config/api_config'
 
 export const TOKEN = 'crm-token'
 
-axios.defaults.baseURL = 'http://localhost:3000/api'
+const server = process.env.NODE_ENV == 'development' ? 'localhost' : apiServer
+
+axios.defaults.baseURL = `http://${server}:${apiPort}/api`
 
 axios.interceptors.request.use(config => {
     const token = window.localStorage.getItem(TOKEN)

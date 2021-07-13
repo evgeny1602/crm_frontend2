@@ -1,5 +1,5 @@
 <template>
-  <div class="tasks">
+  <div class="deals">
     <crm-grid />
   </div>
 </template>
@@ -12,10 +12,11 @@ import { dateTransform } from "@/helpers/transforms";
 export default {
   components: { CrmGrid },
   mounted() {
-    this.$store.dispatch(actionTypes.setItemSingle, "task");
-    this.$store.dispatch(actionTypes.setItemsMany, "tasks");
+    this.$store.dispatch(actionTypes.setItemSingle, "deal");
+    this.$store.dispatch(actionTypes.setItemsMany, "deals");
     this.$store.dispatch(actionTypes.setHeaders, [
       { text: "Описание", value: "description" },
+      { text: "Сумма", value: "amount" },
       {
         text: "Начало",
         value: "start_datetime",
@@ -35,11 +36,11 @@ export default {
         transform: (item) => dateTransform(item.done_datetime),
       },
       {
-        text: "Тип задачи",
-        value: "tasktype",
-        f_table: "tasktypes",
+        text: "Тип сделки",
+        value: "dealtype",
+        f_table: "dealtypes",
         titleFields: ["name"],
-        transform: (item) => (item.tasktype ? item.tasktype.name : ""),
+        transform: (item) => (item.dealtype ? item.dealtype.name : ""),
       },
       {
         text: "Клиент",
@@ -52,37 +53,30 @@ export default {
             : "",
       },
       {
-        text: "Сделка",
-        value: "deal",
-        f_table: "deals",
-        titleFields: ["description"],
-        transform: (item) => (item.deal ? item.deal.description : ""),
-      },
-      {
-        text: "Контролер",
-        value: "masterUser",
+        text: "Ответственный",
+        value: "workerUser",
         f_table: "users",
         titleFields: ["last_name", "first_name", "middle_name"],
         transform: (item) =>
-          item.masterUser
-            ? `${item.masterUser.last_name} ${item.masterUser.first_name} ${item.masterUser.middle_name}`
+          item.workerUser
+            ? `${item.workerUser.last_name} ${item.workerUser.first_name} ${item.workerUser.middle_name}`
             : "",
       },
       {
-        text: "Создатель",
-        value: "createUser",
+        text: "Закрывший",
+        value: "doneUser",
         f_table: "users",
         titleFields: ["last_name", "first_name", "middle_name"],
         transform: (item) =>
-          item.createUser
-            ? `${item.createUser.last_name} ${item.createUser.first_name} ${item.createUser.middle_name}`
+          item.doneUser
+            ? `${item.doneUser.last_name} ${item.doneUser.first_name} ${item.doneUser.middle_name}`
             : "",
       },
     ]);
     this.$store.dispatch(actionTypes.setOrderFields, ["description"]);
     this.$store.dispatch(actionTypes.setFilterFields, ["description"]);
-    this.$store.dispatch(actionTypes.setItemTitle, "Задача");
-    this.$store.dispatch(actionTypes.setItemTitle2, "Задачу");
+    this.$store.dispatch(actionTypes.setItemTitle, "Сделка");
+    this.$store.dispatch(actionTypes.setItemTitle2, "Сделку");
     this.$store.dispatch(actionTypes.initFilter);
   },
 };

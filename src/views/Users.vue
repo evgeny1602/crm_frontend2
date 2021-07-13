@@ -7,6 +7,7 @@
 <script>
 import CrmGrid from "@/components/CrmGrid";
 import { actionTypes } from "@/store/modules/app";
+import { strToBool } from "@/helpers/transforms";
 
 export default {
   components: { CrmGrid },
@@ -15,6 +16,7 @@ export default {
     this.$store.dispatch(actionTypes.setItemsMany, "users");
     this.$store.dispatch(actionTypes.setHeaders, [
       { text: "Логин", value: "login" },
+      { text: "Пароль", value: "password" },
       { text: "Email", value: "email" },
       { text: "Имя", value: "first_name" },
       { text: "Отчество", value: "middle_name" },
@@ -23,15 +25,15 @@ export default {
         text: "Включен",
         value: "is_active",
         is_bool: true,
-        transform: (item) => (item.is_active ? "Да" : "Нет"),
+        transform: (item) => (strToBool(item.is_active) ? "Да" : "Нет"),
       },
       { text: "Аватар", value: "image", is_hidden: true },
       {
         text: "Группа",
         value: "usergroup",
         f_table: "usergroups",
-        titleField: "name",
-        transform: (item) => item.usergroup.name,
+        titleFields: ["name"],
+        transform: (item) => (item.usergroup ? item.usergroup.name : ""),
       },
     ]);
     this.$store.dispatch(actionTypes.setOrderFields, [
@@ -50,6 +52,7 @@ export default {
     ]);
     this.$store.dispatch(actionTypes.setItemTitle, "Пользователь");
     this.$store.dispatch(actionTypes.setItemTitle2, "Пользователя");
+    this.$store.dispatch(actionTypes.initFilter);
   },
 };
 </script>

@@ -2,20 +2,23 @@
   <v-autocomplete
     v-model="value"
     :items="displayItems"
-    outlined
     :label="header.text"
     @update:search-input="update"
   />
 </template>
 
 <script>
-import { actionTypes } from "@/store/modules/app";
+// import { actionTypes } from "@/store/modules/app";
 import crudApi from "@/api/crud";
 
 export default {
   name: "CrmFormAutoItem",
   props: {
     header: {
+      type: Object,
+      required: true,
+    },
+    initVal: {
       type: Object,
       required: true,
     },
@@ -26,22 +29,11 @@ export default {
   },
   computed: {
     displayItems() {
-      // let resultItems = []
-      // for(const item of this.items) {
-      //   let resultItem = {}
-      //   resultItem[this.header.value] = this.header.transform(item);
-      //   resultItems.push(resultItem)
-      // }
-      // return resultItems
-
       return this.items.map((item) => {
         let result = {};
         result[this.header.value] = item;
         return this.header.transform(result);
       });
-    },
-    currentItem() {
-      return this.$store.state.app.currentItem;
     },
   },
   data() {
@@ -81,19 +73,21 @@ export default {
     },
     syncFromCurrent() {
       this.value = null;
-      if (this.currentItem[this.header.value]) {
-        this.value = this.header.transform(this.currentItem);
+      if (this.initVal) {
+        let obj = {};
+        obj[this.header.value] = this.initVal;
+        this.value = this.header.transform(obj);
       }
     },
     syncToCurrentItem() {
-      let newCurrentItem = { ...this.currentItem };
       for (const item of this.items) {
-        if (this.header.transform(item) == this.value) {
-          newCurrentItem[this.header.value] = item;
+        let itemToTransform = {};
+        itemToTransform[this.header.value] = item;
+        if (this.header.transform(itemToTransform) == this.value) {
+          this.$emit("itemChanged", { header: this.header, itemVal: item });
           break;
         }
       }
-      this.$store.dispatch(actionTypes.setCurrentItem, newCurrentItem);
     },
     async update(s) {
       if (!s) {
@@ -105,13 +99,13 @@ export default {
     },
   },
   watch: {
-    currentItem() {
+    initVal(newVal, oldVal) {
+      if (oldVal == newVal) {
+        return;
+      }
       this.syncFromCurrent();
     },
     value(newVal, oldVal) {
-      // if (oldVal === null) {
-      //   return;
-      // }
       if (oldVal == newVal) {
         return;
       }

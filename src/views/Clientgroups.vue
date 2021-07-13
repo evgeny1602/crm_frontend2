@@ -20,6 +20,7 @@ export default {
     this.$store.dispatch(actionTypes.setFilterFields, ["name"]);
     this.$store.dispatch(actionTypes.setItemTitle, "Группа клиентов");
     this.$store.dispatch(actionTypes.setItemTitle2, "Группу клиентов");
+    this.$store.dispatch(actionTypes.initFilter);
   },
 };
 </script>

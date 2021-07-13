@@ -72,12 +72,12 @@ const mutations = {
     [mutationTypes.getCurrentUserFailure](state) {
         state.isLoading = false
         state.isLoggedIn = false
-        state.getCurrentUser = null
+        state.currentUser = null
     },
 
     [mutationTypes.logOut](state) {
         state.isLoggedIn = false
-        state.getCurrentUser = null
+        state.currentUser = null
     }
 }
 

@@ -91,6 +91,15 @@ const app_routes = [
     }
   },
   {
+    path: '/deals',
+    name: 'Deals',
+    component: () => import(/* webpackChunkName: "deals" */ '../views/Deals.vue'),
+    meta: {
+      title: 'Список сделок',
+      requiresAuth: true
+    }
+  },
+  {
     path: '/dealtypes',
     name: 'Dealtypes',
     component: () => import(/* webpackChunkName: "dealtypes" */ '../views/Dealtypes.vue'),

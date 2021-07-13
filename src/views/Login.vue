@@ -63,6 +63,11 @@ export default {
       return this.$store.state.auth.isSubmitting;
     },
   },
+  mounted() {
+    if (this.$store.state.auth.isLoggedIn) {
+      this.$router.push({ name: "Dashboard" });
+    }
+  },
   methods: {
     submit() {
       this.$store

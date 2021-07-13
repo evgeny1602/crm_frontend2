@@ -1,15 +1,8 @@
 <template>
-  <v-text-field
-    :label="header.text"
-    v-model="value"
-    outlined
-    @blur="syncToCurrentItem"
-  />
+  <v-text-field :label="header.text" v-model="value" />
 </template>
 
 <script>
-import { actionTypes } from "@/store/modules/app";
-
 export default {
   name: "CrmFormTextItem",
   props: {
@@ -17,30 +10,25 @@ export default {
       type: Object,
       required: true,
     },
+    initVal: {
+      type: String,
+      required: true,
+    },
   },
   mounted() {
-    this.value = this.currentItem[this.header.value];
-  },
-  computed: {
-    currentItem() {
-      return this.$store.state.app.currentItem;
-    },
+    this.value = this.initVal;
   },
   data() {
     return {
       value: null,
     };
   },
-  methods: {
-    syncToCurrentItem() {
-      let newCurrentItem = { ...this.currentItem };
-      newCurrentItem[this.header.value] = this.value;
-      this.$store.dispatch(actionTypes.setCurrentItem, newCurrentItem);
-    },
-  },
   watch: {
-    currentItem() {
-      this.value = this.currentItem[this.header.value];
+    initVal(newVal, oldVal) {
+      if (oldVal === newVal) {
+        return;
+      }
+      this.value = this.initVal;
     },
     value(newVal, oldVal) {
       if (oldVal === null) {
@@ -49,7 +37,7 @@ export default {
       if (oldVal == newVal) {
         return;
       }
-      this.syncToCurrentItem();
+      this.$emit("itemChanged", { header: this.header, itemVal: this.value });
     },
   },
 };

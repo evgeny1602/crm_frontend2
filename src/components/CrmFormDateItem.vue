@@ -8,7 +8,6 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
-        outlined
         v-model="computedDateFormatted"
         :label="header.text"
         hint="дд.мм.гггг"
@@ -32,7 +31,7 @@
 </template>
 
 <script>
-import { actionTypes } from "@/store/modules/app";
+// import { actionTypes } from "@/store/modules/app";
 // import { dateTransformYearFirst } from "@/helpers/transforms";
 
 export default {
@@ -40,6 +39,10 @@ export default {
   props: {
     header: {
       type: Object,
+      required: true,
+    },
+    initVal: {
+      type: String,
       required: true,
     },
   },
@@ -56,9 +59,6 @@ export default {
     this.syncFromCurrentItem();
   },
   computed: {
-    currentItem() {
-      return this.$store.state.app.currentItem;
-    },
     computedDateFormatted() {
       return this.formatDate();
     },
@@ -73,73 +73,66 @@ export default {
       this.isVisible = false;
     },
     syncFromCurrentItem() {
-      // this.date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-      // .toISOString()
-      // .substr(0, 10);
-      // this.time = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-      // .toISOString()
-      // .split("T")[1]
-      // .substr(0, 5);
       this.date = null;
       this.time = null;
-      if (this.currentItem[this.header.value]) {
-        // const d = dateTransformYearFirst(this.currentItem[this.header.value]);
-        // console.log(d.split(" "));
-        // this.date = d.split(" ")[0];
-        // this.time = d.split(" ")[1];
-        // [this.date, this.time] = d.split(" ");
-        this.date = this.currentItem[this.header.value].substr(0, 10);
-        this.time = this.currentItem[this.header.value]
-          .split("T")[1]
-          .substr(0, 5);
+      if (this.initVal) {
+        this.date = this.initVal.substr(0, 10);
+        this.time = this.initVal.split("T")[1].substr(0, 5);
       }
     },
     syncToCurrentItem() {
       if (!this.date) {
         return;
       }
-      if (!this.time) {
-        return;
+      if (this.time == null) {
+        this.time = "00:00";
       }
-      let newCurrentItem = { ...this.currentItem };
-      newCurrentItem[this.header.value] = `${this.date}T${this.time}:00.000Z`;
-      this.$store.dispatch(actionTypes.setCurrentItem, newCurrentItem);
+      this.$emit("itemChanged", {
+        header: this.header,
+        itemVal: `${this.date}T${this.time}:00.000Z`,
+      });
     },
     formatDate() {
       if (!this.date) return null;
       const [year, month, day] = this.date.split("-");
-      const [hours, minutes] = this.time.split(":");
+      let hours = "00";
+      let minutes = "00";
+      if (this.time) {
+        [hours, minutes] = this.time.split(":");
+      }
       return `${day}.${month}.${year} ${hours}:${minutes}`;
     },
   },
   watch: {
+    initVal(newVal, oldVal) {
+      if (oldVal == newVal) {
+        return;
+      }
+      this.syncFromCurrentItem();
+    },
     isVisible() {
       if (this.isVisible) {
-        this.dateOld = this.currentItem[this.header.value].substr(0, 10);
-        this.timeOld = this.currentItem[this.header.value]
-          .split("T")[1]
-          .substr(0, 5);
+        this.dateOld = null;
+        if (this.initVal) {
+          this.dateOld = this.initVal.substr(0, 10);
+        }
+        this.timeOld = null;
+        if (this.initVal) {
+          this.timeOld = this.initVal.split("T")[1].substr(0, 5);
+        }
       } else {
         this.dateOld = null;
         this.timeOld = null;
       }
     },
-    currentItem() {
-      this.syncFromCurrentItem();
-    },
+
     date(newVal, oldVal) {
-      if (oldVal === null) {
-        return;
-      }
       if (oldVal == newVal) {
         return;
       }
       this.syncToCurrentItem();
     },
     time(newVal, oldVal) {
-      if (oldVal === null) {
-        return;
-      }
       if (oldVal == newVal) {
         return;
       }

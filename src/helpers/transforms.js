@@ -1,3 +1,7 @@
+export const strToBool = s => {
+    return s == "0" ? false : true;
+}
+
 export const dateTransform = d_ => {
     const [y, m, d, hh, mm] = getDateParts(d_)
     if (!y) {
