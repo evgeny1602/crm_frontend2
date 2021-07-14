@@ -17,7 +17,7 @@
         <crm-form-date-item
           v-if="header.is_date"
           :header="header"
-          :initVal="filter[header.value]"
+          :initVal="filter[header.value] || ''"
           @itemChanged="itemChanged"
         />
         <crm-form-auto-item
@@ -82,21 +82,23 @@ export default {
     sToB(s) {
       return strToBool(s);
     },
-    itemChanged({ header, itemVal }) {
+    async itemChanged({ header, itemVal }) {
       let newFilter = { ...this.filter };
       newFilter[header.value] = this.transformFilter(itemVal);
       newFilter.like = 1;
-      this.$store.dispatch(actionTypes.setFilter, newFilter);
+      await this.$store.dispatch(actionTypes.setFilter, newFilter);
       this.$emit("filterChanged");
     },
-    switchFilterStatus() {
-      const newFilterStatus = !this.filterStatus;
-      this.$store.dispatch(actionTypes.setFilterStatus, newFilterStatus);
+    async switchFilterStatus() {
+      await this.$store.dispatch(
+        actionTypes.setFilterStatus,
+        !this.filterStatus
+      );
       this.$emit("filterChanged");
     },
-    resetFilter() {
-      this.$store.dispatch(actionTypes.setFilter, {});
-      this.$store.dispatch(actionTypes.setFilterStatus, false);
+    async resetFilter() {
+      await this.$store.dispatch(actionTypes.setFilter, {});
+      await this.$store.dispatch(actionTypes.setFilterStatus, false);
       this.$emit("filterChanged");
     },
   },

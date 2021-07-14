@@ -117,9 +117,7 @@ export default {
       }
     },
     filterChanged() {
-      if (this.filterStatus) {
-        this.fetchData();
-      }
+      this.fetchData();
     },
     fetchData() {
       let params = {};
@@ -130,10 +128,12 @@ export default {
       params.offset = this.offset;
       params.order = this.order;
       params.ordertype = this.ordertype;
-      this.$store.dispatch(actionTypes.readAll, {
-        apiUrl: "/" + this.itemsMany,
-        params: params,
-      });
+      if (this.itemsMany) {
+        this.$store.dispatch(actionTypes.readAll, {
+          apiUrl: "/" + this.itemsMany,
+          params: params,
+        });
+      }
     },
   },
   mounted() {

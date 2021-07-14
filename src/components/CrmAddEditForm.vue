@@ -6,6 +6,14 @@
           >{{ getFormTitle }}
         </v-card-title>
         <v-card-text>
+          <div class="custom-links-container mb-5">
+            <v-btn
+              v-for="link in customLinks"
+              :key="link.text"
+              @click="linkClicked(link)"
+              >{{ link.text }}</v-btn
+            >
+          </div>
           <div class="form-items-container">
             <div
               class="form-item-wrapper"
@@ -39,6 +47,16 @@ export default {
     },
   },
   methods: {
+    linkClicked(link) {
+      this.$store.dispatch(actionTypes.hideAddEditForm);
+      this.$router.push({
+        name: link.componentName,
+        params: {
+          field: link.fk_field,
+          val: link.fk_val(this.currentItem),
+        },
+      });
+    },
     saveItem() {
       this.$store.dispatch(actionTypes.hideAddEditForm);
       this.$emit("saveItem");
@@ -49,6 +67,9 @@ export default {
     },
   },
   computed: {
+    customLinks() {
+      return this.$store.state.app.customLinks;
+    },
     apiUrl() {
       return "/" + this.$store.state.app.itemsMany;
     },

@@ -14,6 +14,14 @@ export default {
   mounted() {
     this.$store.dispatch(actionTypes.setItemSingle, "clientaddress");
     this.$store.dispatch(actionTypes.setItemsMany, "clientaddresses");
+    this.$store.dispatch(actionTypes.setCustomLinks, [
+      {
+        text: "Клиент",
+        componentName: "Clients",
+        fk_field: "id",
+        fk_val: (item) => item.client.id,
+      },
+    ]);
     this.$store.dispatch(actionTypes.setHeaders, [
       { text: "Адрес", value: "address" },
       { text: "Город", value: "city" },
@@ -52,6 +60,13 @@ export default {
     this.$store.dispatch(actionTypes.setItemTitle, "Адрес клиента");
     this.$store.dispatch(actionTypes.setItemTitle2, "Адрес клиента");
     this.$store.dispatch(actionTypes.initFilter);
+    if (this.$router.currentRoute.params.field) {
+      let filter = {};
+      filter[this.$router.currentRoute.params.field] =
+        this.$router.currentRoute.params.val;
+      this.$store.dispatch(actionTypes.setFilter, filter);
+      this.$store.dispatch(actionTypes.setFilterStatus, true);
+    }
   },
 };
 </script>

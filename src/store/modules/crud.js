@@ -1,4 +1,5 @@
 import crudApi from '@/api/crud'
+import appModule from '@/store/modules/app'
 
 export const mutationTypes = {
 
@@ -88,8 +89,11 @@ const mutations = {
         state.error = null
     },
     [mutationTypes.readAllSuccess](state, data) {
-        state.isLoading = false
-        state.data = data
+        if (Object.keys(data).includes(appModule.state.itemsMany)) {
+            state.isLoading = false
+            state.data = data
+        }
+
     },
     [mutationTypes.readAllFailure](state) {
         state.isLoading = false

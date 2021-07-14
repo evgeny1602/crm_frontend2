@@ -14,6 +14,7 @@ export default {
   mounted() {
     this.$store.dispatch(actionTypes.setItemSingle, "deal");
     this.$store.dispatch(actionTypes.setItemsMany, "deals");
+    this.$store.dispatch(actionTypes.setCustomLinks, []);
     this.$store.dispatch(actionTypes.setHeaders, [
       { text: "Описание", value: "description" },
       { text: "Сумма", value: "amount" },
@@ -78,6 +79,13 @@ export default {
     this.$store.dispatch(actionTypes.setItemTitle, "Сделка");
     this.$store.dispatch(actionTypes.setItemTitle2, "Сделку");
     this.$store.dispatch(actionTypes.initFilter);
+    if (this.$router.currentRoute.params.field) {
+      let filter = {};
+      filter[this.$router.currentRoute.params.field] =
+        this.$router.currentRoute.params.val;
+      this.$store.dispatch(actionTypes.setFilter, filter);
+      this.$store.dispatch(actionTypes.setFilterStatus, true);
+    }
   },
 };
 </script>

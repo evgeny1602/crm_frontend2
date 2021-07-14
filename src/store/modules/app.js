@@ -14,6 +14,8 @@ export const mutationTypes = {
     hideDeleteForm: '[app] hideDeleteForm',
     setFilter: '[app] setFilter',
     setFilterStatus: '[app] setFilterStatus',
+    setCustomActions: '[app] setCustomActions',
+    setCustomLinks: '[app] setCustomLinks',
 }
 
 export const actionTypes = {
@@ -33,6 +35,8 @@ export const actionTypes = {
     setFilter: '[app] setFilter',
     setFilterStatus: '[app] setFilterStatus',
     initFilter: '[app] initFilter',
+    setCustomActions: '[app] setCustomActions',
+    setCustomLinks: '[app] setCustomLinks',
 }
 
 const state = {
@@ -48,9 +52,17 @@ const state = {
     currentItem: null,
     filter: null,
     filterStatus: false,
+    customActions: [],
+    customLinks: [],
 }
 
 const mutations = {
+    [mutationTypes.setCustomLinks](state, links) {
+        state.customLinks = links
+    },
+    [mutationTypes.setCustomActions](state, actions) {
+        state.customActions = actions
+    },
     [mutationTypes.setFilterStatus](state, status) {
         state.filterStatus = status
     },
@@ -108,6 +120,12 @@ const mutations = {
 }
 
 const actions = {
+    [actionTypes.setCustomLinks](context, links) {
+        context.commit(mutationTypes.setCustomLinks, links)
+    },
+    [actionTypes.setCustomActions](context, actions) {
+        context.commit(mutationTypes.setCustomActions, actions)
+    },
     [actionTypes.setFilterStatus](context, status) {
         context.commit(mutationTypes.setFilterStatus, status)
     },
@@ -164,6 +182,7 @@ const actions = {
             filter[header.value] = initVal;
         }
         context.commit(mutationTypes.setFilter, filter)
+        context.commit(mutationTypes.setFilterStatus, false)
     }
 }
 

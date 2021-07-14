@@ -14,6 +14,7 @@ export default {
   mounted() {
     this.$store.dispatch(actionTypes.setItemSingle, "event");
     this.$store.dispatch(actionTypes.setItemsMany, "events");
+    this.$store.dispatch(actionTypes.setCustomLinks, []);
     this.$store.dispatch(actionTypes.setHeaders, [
       { text: "Описание", value: "description" },
       {
@@ -85,6 +86,13 @@ export default {
     this.$store.dispatch(actionTypes.setItemTitle, "Событие");
     this.$store.dispatch(actionTypes.setItemTitle2, "Событие");
     this.$store.dispatch(actionTypes.initFilter);
+    if (this.$router.currentRoute.params.field) {
+      let filter = {};
+      filter[this.$router.currentRoute.params.field] =
+        this.$router.currentRoute.params.val;
+      this.$store.dispatch(actionTypes.setFilter, filter);
+      this.$store.dispatch(actionTypes.setFilterStatus, true);
+    }
   },
 };
 </script>

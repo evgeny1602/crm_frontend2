@@ -14,6 +14,7 @@ export default {
   mounted() {
     this.$store.dispatch(actionTypes.setItemSingle, "user");
     this.$store.dispatch(actionTypes.setItemsMany, "users");
+    this.$store.dispatch(actionTypes.setCustomLinks, []);
     this.$store.dispatch(actionTypes.setHeaders, [
       { text: "Логин", value: "login" },
       { text: "Пароль", value: "password" },
@@ -53,6 +54,13 @@ export default {
     this.$store.dispatch(actionTypes.setItemTitle, "Пользователь");
     this.$store.dispatch(actionTypes.setItemTitle2, "Пользователя");
     this.$store.dispatch(actionTypes.initFilter);
+    if (this.$router.currentRoute.params.field) {
+      let filter = {};
+      filter[this.$router.currentRoute.params.field] =
+        this.$router.currentRoute.params.val;
+      this.$store.dispatch(actionTypes.setFilter, filter);
+      this.$store.dispatch(actionTypes.setFilterStatus, true);
+    }
   },
 };
 </script>
